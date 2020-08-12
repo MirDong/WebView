@@ -3,7 +3,7 @@
     package="com.dzk.webview">
 
     <application>
-        <activity android:name=".WebViewActivity"></activity>
+        <activity android:name=".WebViewActivity" android:theme="@style/MyTheme"></activity>
     </application>
 
 </manifest>

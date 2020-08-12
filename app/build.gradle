@@ -20,11 +20,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "androidx.appcompat:appcompat:$rootProject.androidXVersion"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-
+    implementation project(":webview")
 }
