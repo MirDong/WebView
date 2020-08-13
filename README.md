@@ -135,8 +135,22 @@ WebView webview = (WebView) findViewById(R.id.webView1);
 
 
 配置步骤3： 进行配置WebSettings类
+```java
+//声明webSettings子类
+WebSettings webSettings = webView.getSettings();
+//如果访问的页面中要与javascript交互，则webview必须设置支持javascript
+webSettings.setJavaScriptEnabled(true);
+//支持插件
+webSettings.setPluginEnabled(true);
 
+//设置自适应屏幕
+webSettings.setUseWideViewPort(true);//将图片调整到适合webview的大小
+webSettings.setLoadWithOverviewMode(true);//缩放至屏幕大小
+////支持缩放，默认为true。是下面那个的前提。webSettings.setBuiltInZoomControls(true); //设置内置的缩放控件。若为false，则该WebView不可缩放
+webSettings.setSupportZoom(true);
 
+webViewSetting
+```
 
 ### 3.3 与js交互
 

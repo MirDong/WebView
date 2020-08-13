@@ -35,5 +35,7 @@ public class WebViewActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+//        mBinding.webview.getSettings().setLoadWithOverviewMode(true);
     }
 }
