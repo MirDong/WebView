@@ -107,7 +107,7 @@ webview.clearFormData();
 
 ### 3.2 常用类
 
-3.2.1 WebSettings类
+#### 3.2.1 WebSettings类
 
 - 作用：对WebView进行配置和管理
 
@@ -148,9 +148,96 @@ webSettings.setUseWideViewPort(true);//将图片调整到适合webview的大小
 webSettings.setLoadWithOverviewMode(true);//缩放至屏幕大小
 ////支持缩放，默认为true。是下面那个的前提。webSettings.setBuiltInZoomControls(true); //设置内置的缩放控件。若为false，则该WebView不可缩放
 webSettings.setSupportZoom(true);
-
-webViewSetting
+//如果缓存可用优先 使用webview缓存，
+webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+//设置可以访问文件
+webSettings.setAllowFileAccess(true);
+//支持通过JS打开新窗口
+webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+//支持自动加载图片
+webSettings.setLoadImagesAutomatically(true);
+//设置编码格式
+webSettings.setDefaultTextEncodingName("utf-8");
 ```
+
+**常用用法：设置WebView缓存**
+
+- 当加载html页面时，WebView会在/data/data/包名  目录下生成database与cache两个文件夹
+
+- 请求的URL记录保存在WebViewCache.db,而URL的内容是保存在WebViewCache文件下
+
+- 是否启用缓存：
+
+  ```java
+  //默认缓存使用模式，如果跳转不强加任何特定行为，缓存资源可用时，加载可用资源，否则加载网络资源
+  public static final int LOAD_DEFAULT = -1;
+  //当有缓存资源可用时，使用缓存资源，即使缓存已经过期。否则加载网络资源
+  public static final int LOAD_CACHE_ELSE_NETWORK = 1;
+  //不使用缓存资源，仅从网络加载
+  public static final int LOAD_NO_CACHE = 2;
+  //不使用网络资源，加载缓存资源
+  public static final int LOAD_CACHE_ONLY = 3;
+  WebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+  ```
+
+- 综合使用(离线加载)
+
+  ```java
+  if(NetStatusUtil.isConnected(getApplicationContext())){
+      //根据cache-control决定是否从网络上获取
+      webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+  }else{
+      webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+  }
+  //开启DOM storage API 功能
+  webSettings.setDomStorageEnabled(true);
+  //开启database storage API功能
+  webSettings.setDatabaseEnabled(true);
+  //开启Application Caches 功能
+  webSettings.setAppCacheEnabled(true);
+  
+  String cacheDirPath = getFilesDir().getAbsolutePath() + APP_CACHE_DIRNAME;
+  //设置Application Caches 缓存目录
+  webSettings.setAppCachePath(cacheDirPath);
+  ```
+
+  注意: 每个Application只调用一次WebSettings.setApplicationCachePath()和WebSettings.setAppCacheMaxSize()
+
+  #### 3.2.2 WebViewClient类
+
+  - 作用：处理各种通知和请求事件
+
+  - 常见方法:
+
+    **1.shouldOverrideUrlLoading()**
+
+    - 作用：打开网页时不调用系统浏览器，而是在WebView中显示；网页上的所有加载都经过这个方法，这个函数我们可以做很多操作。
+
+      ```java
+      //1.定义webview组件
+      WebView webview = (WebView) findViewById(R.id.webview);
+      //2.选择加载方式
+      //方式1：加载一个网页
+      webview.loadUrl("http://google.com/");
+      //方式2：加载apk包中的html页面
+      webview.loadUrl("file:///android_asset/test.html");
+      //方式3：加载手机本地的html页面
+      webview.loadUrl("content://com.android.htmlfileprovider/sdcard/test.html");
+      //3.重写shouldOverrideUrlLoading()方法
+      webview.setWebViewClient(new WebViewClient(){
+         @Override
+          public boolean shouldOverrideUrlLoading(WebView view,String url){
+        		view.loadUrl(url);
+              return true;
+          }
+      });
+      ```
+
+      
+
+**2.onPageStarted()**
+
+- 作用：开始载入页面调用的，我们可以设定一个loading的页面，告诉用户程序在等待网络响应。
 
 ### 3.3 与js交互
 
