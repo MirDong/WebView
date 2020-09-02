@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.dzk.common.autoservice.IWebViewService;
+import com.dzk.webview.util.Constants;
 import com.google.auto.service.AutoService;
 
 /**
@@ -19,9 +20,17 @@ public class WebViewServiceImpl implements IWebViewService {
     @Override
     public void startWebViewActivity(Context context, String url, String title, boolean isShowActionBar) {
         Intent intent = new Intent(context,WebViewActivity.class);
-        intent.putExtra("url",url);
-        intent.putExtra("title",title);
-        intent.putExtra("isShowActionBar",isShowActionBar);
+        intent.putExtra(Constants.URL,url);
+        intent.putExtra(Constants.TITLE,title);
+        intent.putExtra(Constants.IS_SHOW_ACTION_BAR,isShowActionBar);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void openDemoHtml(Context context) {
+        Intent intent = new Intent(context,WebViewActivity.class);
+        intent.putExtra(Constants.URL,Constants.LOCAL_DEMO_HTML + "demo.html");
+        intent.putExtra(Constants.TITLE,"demo html");
         context.startActivity(intent);
     }
 }

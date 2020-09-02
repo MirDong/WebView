@@ -25,5 +25,8 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "androidx.appcompat:appcompat:$rootProject.androidXVersion"
-
+    api "com.kingja.loadsir:loadsir:$rootProject.loadsir"
+    implementation "com.airbnb.android:lottie:${rootProject.lottie}"
+    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-7'
+    api 'com.google.code.gson:gson:2.8.5'
 }

@@ -15,4 +15,5 @@ public interface IWebViewService {
      * @param isShowActionBar  是否显示ActionBar
      */
     void startWebViewActivity(Context context,String url,String title,boolean isShowActionBar);
+    void openDemoHtml(Context context);
 }

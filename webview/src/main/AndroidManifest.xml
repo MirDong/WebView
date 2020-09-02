@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dzk.webview">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application>
-        <activity android:name=".WebViewActivity" android:theme="@style/MyTheme"></activity>
+        <activity
+            android:process=":jswebview"
+            android:name=".WebViewActivity" android:theme="@style/MyTheme"></activity>
+        <service android:name=".mainprocess.MainProcessCommandService"/>
     </application>
 
 </manifest>

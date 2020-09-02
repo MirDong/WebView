@@ -2,13 +2,18 @@ package com.dzk.webview;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.Window;
 
 import com.dzk.webview.databinding.ActivityWebViewBinding;
+import com.dzk.webview.util.Constants;
 
 public class WebViewActivity extends AppCompatActivity {
     ActivityWebViewBinding mBinding;
@@ -19,16 +24,15 @@ public class WebViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding =  DataBindingUtil.setContentView(this,R.layout.activity_web_view);
-        mBinding.webview.getSettings().setJavaScriptEnabled(true);
         Intent intent = getIntent();
         if (intent != null){
-            url = intent.getStringExtra("url");
-            title = intent.getStringExtra("title");
-            isShowActionBar = intent.getBooleanExtra("isShowActionBar",false);
+            url = intent.getStringExtra(Constants.URL);
+            title = intent.getStringExtra(Constants.TITLE);
+            isShowActionBar = intent.getBooleanExtra(Constants.IS_SHOW_ACTION_BAR,false);
         }
         mBinding.title.setText(title);
         mBinding.actionBar.setVisibility(isShowActionBar? View.VISIBLE:View.GONE);
-        mBinding.webview.loadUrl(url);
+//        mBinding.webview.loadUrl(url);
         mBinding.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -37,5 +41,18 @@ public class WebViewActivity extends AppCompatActivity {
         });
 
 //        mBinding.webview.getSettings().setLoadWithOverviewMode(true);
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.web_view_fragment,WebViewFragment.getInstance(url,true)).commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
+    public void updateTitle(String title){
+        mBinding.title.setText(title);
     }
 }

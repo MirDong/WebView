@@ -239,11 +239,159 @@ webSettings.setDefaultTextEncodingName("utf-8");
 
 - 作用：开始载入页面调用的，我们可以设定一个loading的页面，告诉用户程序在等待网络响应。
 
+  ```java
+  webview.setWebView(new WebViewClient(){
+      @Override
+      public void onPageStarted(WebView view,String url,Bitmap bitmap){
+          //设定加载开始的操作
+      }
+  });
+  ```
+
+**3.onPageFinished**()
+
+- 作用:在页面加载结束时调用。我们可以关闭loading条，切换程序动作。
+
+  ```java
+  webview.setWebViewClient(new WebViewClient(){
+      @Override
+      public void onPageFinished(WebView view,String url){
+          //设定加载结束的操作
+      }
+  });
+  ```
+
+  **4.onLoadResource**()
+
+- 作用：在加载页面资源时会调用，每一个资源(比如图片)的加载都会调用一次。
+
+  ```java
+  webview.setWebViewClient(new WebViewClient(){
+      @Override
+      public void onLoadResource(WebView view,String url){
+          //设定加载资源的操作
+      }
+  });
+  ```
+
+  **onReceiveError**()
+
+- 作用:加载页面的服务器出现错误时(如404)调用。
+
+  App里面使用WebView控件的时候遇到了诸如404这类的错误时，若也显示浏览器错误页面就显得丑，此时需要我们的app需要加载一个本地的错误提示页，即WebView如何加载一个本地的页面。
+
+  ```java
+  //步骤1:写一个html文件(error_handle.html)，用于出错时展示给用户看的提示页面
+  //步骤2：将该html文件放置到代码根目录的assets文件下。
+  //步骤3：复写webviewclient的onReceivedError方法
+  webview.setWebClient(new WebViewClient(){
+      @Override
+      public void onReceivedError(WebView view,int errorCode, String description, String failingUrl){
+          switch(errorCode){
+              case HttpStatus.SC_NOT_FOUND:
+                  view.loadUrl("file:///android_assets/error_handle.html");
+                  break;
+          }
+      }
+  });
+  ```
+
+- **onReceivedSslError**()
+
+- 作用：处理https请求
+
+  WebView默认是不处理https请求的,页面显示空白，需要进行如下设置:
+
+  ```java
+  webview.setWebViewClient(new WebViewClient(){
+      @Override
+      public void onReceivedSslError(WebView view,SslErrorHandler handler, SslError error){
+          handler.proceed();//等待证书响应
+          //handler.cancle();表示挂起连接，为默认方式
+          //handler.handleMessage(null);可做其他处理
+      }
+  });
+  ```
+
+  #### 3.2.2 WebChromeClient类
+
+  作用：辅助WebVIew处理JavaScript的对话框，网站图标，网站标题等等。
+
+  - **onProgressChanged**()
+
+  - 作用: 获得网页的加载进度并显示
+
+    ```java
+    
+    webview.setWebChromeClient(new WebChromeClient(){
+    
+          @Override
+          public void onProgressChanged(WebView view, int newProgress) {
+              if (newProgress <= 100) {
+                  String progress = newProgress + "%";
+                  progress.setText(progress);
+                } else {
+                  
+              }
+            }
+        });
+    ```
+
+    
+
+  - **onReceivedTitle**()
+
+  - 作用: 获取Web页的标题
+
+    每个网页页面都有一个标题，如www.baidu.com页面标题是"百度一下，你就知道"
+
+    ```java
+    webview.setWebChromeClient(new WebChromeClkient(){
+        @Override
+        public void onReceivedTitle(WebView view,String title{
+            titleView.setText(title);
+        }
+    });
+    ```
+
+    
+
 ### 3.3 与js交互
 
 ### 3.4 注意事项
 
+如何避免内存泄漏
+
+**3.4.1  不在xml中定义WebView,而是在需要的时候在Activity中创建，并且Context 使用getApplicationContext()**
+
+```java
+LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mWebView = new WebView(getApplicationContext());
+        mWebView.setLayoutParams(params);
+        mLayout.addView(mWebView);
+```
+
+3.4.2 在Activity销毁(WebView)的时候,先让WebView加载null内容，然后移除WebView，销毁WebView，最后置空。
+
+```java
+@Override
+    protected void onDestroy() {
+        if (mWebView != null) {
+            mWebView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
+            mWebView.clearHistory();
+
+            ((ViewGroup) mWebView.getParent()).removeView(mWebView);
+            mWebView.destroy();
+            mWebView = null;
+        }
+        super.onDestroy();
+    }
+```
+
+
+
 ## 4.实例
 
 ## 5.总结
+介绍了WebView的基本使用方法。WebSettings类的设置,WebViewClient类和WebChromeClient类的回调方法使用，WebView如何避免内存的泄漏需要注意的事项。
 
