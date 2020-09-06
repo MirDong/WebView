@@ -45,7 +45,7 @@ public class BaseWebView extends WebView {
     }
 
     private void init() {
-//        WebViewProcessCommandDispatcher.getInstance().initAidlConnect();
+        WebViewProcessCommandDispatcher.getInstance().initAidlConnect();
         WebViewDefaultSettings.getInstance().setSettings(this);
         addJavascriptInterface(this,"xiangxuewebview");
     }
@@ -60,10 +60,8 @@ public class BaseWebView extends WebView {
         Log.d(TAG, jsParams);
         if (!TextUtils.isEmpty(jsParams)){
             final JsParam jsParamObject = new Gson().fromJson(jsParams,JsParam.class);
-            try {
-                Toast.makeText(getContext(),String.valueOf(new Gson().fromJson(jsParamObject.param, Map.class).get("message")),Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (jsParamObject != null){
+                WebViewProcessCommandDispatcher.getInstance().executeCommand(jsParamObject.name,new Gson().toJson(jsParamObject.param),this);
             }
         }
     }

@@ -16,3 +16,4 @@ xiangxuejs.takeNativeAction = function(commandname,parameters){
         window.webkit.messageHandlers.xiangxuewebview.postMessage(JSON.stringify(request));
     }
 }
+

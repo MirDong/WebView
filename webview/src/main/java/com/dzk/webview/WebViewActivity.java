@@ -32,7 +32,6 @@ public class WebViewActivity extends AppCompatActivity {
         }
         mBinding.title.setText(title);
         mBinding.actionBar.setVisibility(isShowActionBar? View.VISIBLE:View.GONE);
-//        mBinding.webview.loadUrl(url);
         mBinding.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,7 +39,6 @@ public class WebViewActivity extends AppCompatActivity {
             }
         });
 
-//        mBinding.webview.getSettings().setLoadWithOverviewMode(true);
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.web_view_fragment,WebViewFragment.getInstance(url,true)).commit();

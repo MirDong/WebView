@@ -6,6 +6,9 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+/**
+ * @author Administrator
+ */
 public class MainProcessCommandService extends Service {
     @Nullable
     @Override
