@@ -65,4 +65,17 @@ public class BaseWebView extends WebView {
             }
         }
     }
+
+    public void handleCallback(final String callbackname,final String response){
+        if (!TextUtils.isEmpty(callbackname) && !TextUtils.isEmpty(response)){
+            post(new Runnable() {
+                @Override
+                public void run() {
+                    String jsCode = "javascript:xiangxuejs.callback('" + callbackname +"'," + response + ")";
+                    Log.e(TAG,jsCode);
+                    evaluateJavascript(jsCode,null);
+                }
+            });
+        }
+    }
 }

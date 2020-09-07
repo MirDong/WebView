@@ -32,6 +32,7 @@
         function login(){
             console.log("login.");
             xiangxuejs.takeNativeActionWithCallback("login", {}, function(res) {
+                 console.log("res = "+res.accountName);
                  var element = document.createElement("div");
                  element.appendChild(document.createTextNode("userName: "+res.accountName));
                  document.getElementById('login_id').appendChild(element);

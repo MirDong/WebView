@@ -65,7 +65,7 @@ public class WebViewProcessCommandDispatcher implements ServiceConnection {
                 webViewProcessToMainProcessInterface.handleCommand(command, paramters, new ICallbackFromMainProcessToWebViewProcessInterface.Stub() {
                     @Override
                     public void onResult(String callbackName, String response) throws RemoteException {
-
+                            webView.handleCallback(callbackName, response);
                     }
                 });
             } catch (RemoteException e) {
